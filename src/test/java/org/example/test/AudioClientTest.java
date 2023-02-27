@@ -16,12 +16,12 @@ import org.eclipse.jetty.http.HttpMethod;
 
 public class AudioClientTest {
 
-    private static final int NUM_CLIENTS = 10;
-    private static final int NUM_GET_REQUESTS = 20;
-    private static final int NUM_POST_REQUESTS = 10;
+    private static final int NUM_OF_CLIENTS = 10;
+    private static final int NUM_OF_GET_REQUESTS = 20;
+    private static final int NUM_OF_POST_REQUESTS = 10;
 
     public static void main(String[] args) throws Exception {
-        ExecutorService executor = Executors.newFixedThreadPool(NUM_CLIENTS);
+        ExecutorService executor = Executors.newFixedThreadPool(NUM_OF_CLIENTS);
         ResourceServletAudioItems servlet = new ResourceServletAudioItems();
 
         // start the server
@@ -31,50 +31,50 @@ public class AudioClientTest {
             e.printStackTrace();
         }
 
-        // create arrays to store response times
-        long[] getResponseTimes = new long[NUM_CLIENTS * NUM_GET_REQUESTS];
-        long[] postResponseTimes = new long[NUM_CLIENTS * NUM_POST_REQUESTS];
+       
+        long[] getResponseTimes = new long[NUM_OF_CLIENTS * NUM_OF_GET_REQUESTS];
+        long[] postResponseTimes = new long[NUM_OF_CLIENTS * NUM_OF_POST_REQUESTS];
 
-        // create threads for GET requests
-        for (int i = 0; i < NUM_GET_REQUESTS; i++) {
-            for (int j = 0; j < NUM_CLIENTS; j++) {
-                executor.execute(new GetRequestRunnable(servlet, getResponseTimes, i * NUM_CLIENTS + j));
+       
+        for (int i = 0; i < NUM_OF_GET_REQUESTS; i++) {
+            for (int j = 0; j < NUM_OF_CLIENTS; j++) {
+                executor.execute(new GetRequest(servlet, getResponseTimes, i * NUM_OF_CLIENTS + j));
             }
         }
 
-        // create threads for POST requests
-        for (int i = 0; i < NUM_POST_REQUESTS; i++) {
-            for (int j = 0; j < NUM_CLIENTS; j++) {
-                executor.execute(new PostRequestRunnable(servlet, postResponseTimes, i * NUM_CLIENTS + j));
+        
+        for (int i = 0; i < NUM_OF_POST_REQUESTS; i++) {
+            for (int j = 0; j < NUM_OF_CLIENTS; j++) {
+                executor.execute(new PostRequest(servlet, postResponseTimes, i * NUM_OF_CLIENTS + j));
             }
         }
 
-        // wait for all threads to complete
+        
         executor.shutdown();
         while (!executor.isTerminated()) {
             // do nothing
         }
 
-        // print out the response times
-        System.out.println("GET Response Times:");
+    
+        System.out.println("GET Response Times in millisecond:");
         for (int i = 0; i < getResponseTimes.length; i++) {
             System.out.println(getResponseTimes[i] + " ms");
         }
 
-        System.out.println("POST Response Times:");
+        System.out.println("POST Response Times in millisecond:");
         for (int i = 0; i < postResponseTimes.length; i++) {
             System.out.println(postResponseTimes[i] + " ms");
         }
     }
 }
 
-class GetRequestRunnable implements Runnable {
+class GetRequest implements Runnable {
     
     private ResourceServletAudioItems servlet;
     private long[] responseTimes;
     private int index;
     
-    public GetRequestRunnable(ResourceServletAudioItems servlet, long[] responseTimes, int index) {
+    public GetRequest(ResourceServletAudioItems servlet, long[] responseTimes, int index) {
         this.servlet = servlet;
         this.responseTimes = responseTimes;
         this.index = index;
@@ -83,11 +83,11 @@ class GetRequestRunnable implements Runnable {
     @Override
     public void run() {
         try {
-            String url = "http://localhost:8080/coen6317/audioitems?id=" + new Random().nextInt(1000);
+            String url = "http://155.248.226.126:8080/audioitems?id=" + new Random().nextInt(1000);
             HttpClient httpClient = new HttpClient();
             httpClient.start();
             Request request = httpClient.newRequest(url).method(HttpMethod.GET);
-            request.param("id","id_1");
+            request.param("artist_name","artist_name_1");
             long startTime = System.currentTimeMillis();
             ContentResponse response = request.send();
             long endTime = System.currentTimeMillis();
@@ -99,13 +99,13 @@ class GetRequestRunnable implements Runnable {
     }
 }
 
-class PostRequestRunnable implements Runnable {
+class PostRequest implements Runnable {
     
     private ResourceServletAudioItems servlet;
     private long[] responseTimes;
     private int index;
     
-    public PostRequestRunnable(ResourceServletAudioItems servlet, long[] responseTimes, int index) {
+    public PostRequest(ResourceServletAudioItems servlet, long[] responseTimes, int index) {
 this.servlet = servlet;
 this.responseTimes = responseTimes;
 this.index = index;
@@ -114,18 +114,17 @@ this.index = index;
 public void run() {
     try {
     	Random random = new Random();
-        String url = "http://localhost:8080/coen6317/audioitems";
+        String url = "http://155.248.226.126:8080/audioitems";
         HttpClient httpClient = new HttpClient();
         httpClient.start();
         Request request = httpClient.newRequest(url).method(HttpMethod.POST);
-        request.param("id","id_" + random.nextInt(100));
-        request.param("artistName", "artist_name_3");
-        request.param("albumTitle", "album_title_3");
-        request.param("trackTitle", "track_title_3");
-        request.param("numCopiesSold", "100");
-        request.param("numReviews", "10");
-        request.param("trackNumber", "3");
-        request.param("year", "2023");
+        request.param("artistName", "artist_name_4"+random.nextInt(100));
+        request.param("albumTitle", "album_title_4");
+        request.param("trackTitle", "track_title_4");
+        request.param("numCopiesSold", "1000");
+        request.param("numReviews", "100");
+        request.param("trackNumber", "2");
+        request.param("year", "2021");
         long startTime = System.currentTimeMillis();
         ContentResponse response = request.send();
         long endTime = System.currentTimeMillis();
