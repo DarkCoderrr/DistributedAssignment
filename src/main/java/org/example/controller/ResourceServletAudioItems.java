@@ -43,7 +43,7 @@ public class ResourceServletAudioItems extends HttpServlet {
         audio1.setYear(2021);
         audio1.setNumReviews(10);
         audio1.setNumCopiesSold(10000);
-        audioDB.put("id_1", audio1);
+        audioDB.put("artist_name_1", audio1);
 
         Audio audio2 = new Audio();
         audio2.setArtistName("artist_name_2");
@@ -53,7 +53,7 @@ public class ResourceServletAudioItems extends HttpServlet {
         audio2.setYear(2022);
         audio2.setNumReviews(5);
         audio2.setNumCopiesSold(5000);
-        audioDB.put("id_2", audio2);
+        audioDB.put("artist_name_2", audio2);
     }
 
     private int calculateTotalCopiesSold() {
@@ -67,8 +67,8 @@ public class ResourceServletAudioItems extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
-        String id = request.getParameter("id");
-        Audio audio = audioDB.get(id);
+        String artistName = request.getParameter("artist_name");
+        Audio audio = audioDB.get(artistName);
 
         if (audio != null) {
         	
@@ -99,14 +99,14 @@ public class ResourceServletAudioItems extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String id = request.getParameter("id");
+        String artistName = request.getParameter("artistName");
 
-        if (audioDB.containsKey(id)) {
-            response.sendError(HttpServletResponse.SC_CONFLICT, "Audio item with id " + id + " already exists.");
+        if (audioDB.containsKey(artistName)) {
+            response.sendError(HttpServletResponse.SC_CONFLICT, "Audio item with Artist Name " + artistName + " already exists.");
         } else {
             Audio audio = new Audio();
 //            totalCopiesSold = calculateTotalCopiesSold();
-            audio.setArtistName(request.getParameter("artistName"));
+            audio.setArtistName(artistName);
             audio.setAlbumTitle(request.getParameter("albumTitle"));
             audio.setTrackTitle(request.getParameter("trackTitle"));
             audio.setNumCopiesSold(Integer.parseInt(request.getParameter("numCopiesSold")));
@@ -115,11 +115,11 @@ public class ResourceServletAudioItems extends HttpServlet {
             audio.setYear(Integer.parseInt(request.getParameter("year")));
 //            audio.setTotalCopiesSold(totalCopiesSold);
 
-            audioDB.put(id, audio);
+            audioDB.put(artistName, audio);
             
 
             response.setStatus(HttpServletResponse.SC_CREATED);
-            response.getOutputStream().println("Audio item with id " + id + " is added to the database.");
+            response.getOutputStream().println("Audio item with Artist Name " + artistName + " is added to the database.");
         }
     }
     }
