@@ -83,7 +83,7 @@ class GetRequestRunnable implements Runnable {
     @Override
     public void run() {
         try {
-            String url = "http://localhost:9090/coen6317/audioitems?id=" + new Random().nextInt(1000);
+            String url = "http://localhost:8080/coen6317/audioitems?id=" + new Random().nextInt(1000);
             HttpClient httpClient = new HttpClient();
             httpClient.start();
             Request request = httpClient.newRequest(url).method(HttpMethod.GET);
@@ -114,7 +114,7 @@ this.index = index;
 public void run() {
     try {
     	Random random = new Random();
-        String url = "http://localhost:9090/coen6317/audioitems";
+        String url = "http://localhost:8080/coen6317/audioitems";
         HttpClient httpClient = new HttpClient();
         httpClient.start();
         Request request = httpClient.newRequest(url).method(HttpMethod.POST);
