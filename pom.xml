@@ -141,10 +141,14 @@
                 <version>${jetty.version}</version>
             </plugin>
              <plugin>
-            <groupId>com.google.appengine</groupId>
-            <artifactId>appengine-maven-plugin</artifactId>
-            <version>1.9.9</version>
-        </plugin>
+     <groupId>com.google.cloud.tools</groupId>
+     <artifactId>appengine-maven-plugin</artifactId>
+     <version>2.4.4</version>
+     <configuration>
+       <deploy.stopPreviousVersion>true</deploy.stopPreviousVersion>
+       <cloudSdkHome>/usr/foo/path/to/cloudsdk</cloudSdkHome>
+     </configuration>
+  </plugin>
         </plugins>
     </build>
 </project>
