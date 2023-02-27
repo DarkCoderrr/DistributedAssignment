@@ -1,13 +1,8 @@
 package org.example;
 
 
-import org.eclipse.jetty.server.Connector;
 import org.eclipse.jetty.server.Server;
-import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.server.handler.ContextHandler;
-import org.eclipse.jetty.servlet.ServletHandler;
 import org.eclipse.jetty.util.resource.Resource;
-import org.eclipse.jetty.util.thread.QueuedThreadPool;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import java.io.File;
@@ -20,43 +15,17 @@ public class EmbeddingJettyStarter {
 
     public static void main(String[] args) throws Exception
     {
-         
-        
-
-        int maxThreads = 100;
-        int minThreads = 10;
-        int idleTimeout = 120;
         int port = 8080;
-
-        QueuedThreadPool threadPool = 
-        		new QueuedThreadPool(maxThreads, minThreads, idleTimeout);
-
-        Server server = new Server(threadPool);
-        ServerConnector connector = new ServerConnector(server);
-        connector.setPort(port);
-        server.setConnectors(new Connector[] {connector});
-        
-       // Server server = new Server(port);
-        
-        /*
-         * context setting the configuration properties
-         */
-        //String  contextPath = "/skiresortApp";
         String contextPath = "/coen6317";
+
+        Server server = new Server(port);
         URI webResourceBase = findWebResourceBase(server.getClass().getClassLoader());
         System.err.println("Using BaseResource: " + webResourceBase);
         WebAppContext context = new WebAppContext();
         context.setBaseResource(Resource.newResource(webResourceBase));
         context.setContextPath(contextPath);
         context.setParentLoaderPriority(true);
-        
-        /*
-         * different handlers can be added. for example the authentication. 
-         */
         server.setHandler(context);
-        
-        
-        
         server.start();
         server.join();
     }
